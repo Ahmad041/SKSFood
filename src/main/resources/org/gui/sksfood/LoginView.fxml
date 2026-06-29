@@ -1,14 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.gui.sksfood.controller.LoginController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="900" prefWidth="1280" style="-fx-background-color: #EEF0F8;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.gui.sksfood.controller.LoginController">
 
-</AnchorPane>
+    <!-- ═══════════════════════════════════════════ CENTER CARD ════ -->
+    <center>
+        <StackPane BorderPane.alignment="CENTER">
+            <!-- Card -->
+            <VBox alignment="CENTER" maxWidth="400" minWidth="400.0" prefHeight="757.0" prefWidth="400.0" style="-fx-background-color: #FFFFFF;                         -fx-background-radius: 16;                         -fx-effect: dropshadow(gaussian, rgba(0,0,50,0.08), 24, 0, 0, 4);">
+                <padding>
+                    <Insets bottom="52" left="48" right="48" top="52" />
+                </padding>
+                <VBox.margin>
+                    <Insets bottom="60" top="60" />
+                </VBox.margin>
+
+                <!-- ── Logo ── -->
+                <Label style="-fx-font-size: 36px;                             -fx-font-weight: 700;                             -fx-text-fill: #0D2B8E;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="SKS-Food">
+                </Label>
+
+                <!-- ── Subtitle ── -->
+                <Label style="-fx-font-size: 11px;                             -fx-font-weight: 500;                             -fx-text-fill: #8090B0;                             -fx-letter-spacing: 2px;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="HIMMA PENDIDIKAN">
+                    <VBox.margin>
+                        <Insets bottom="32" top="4" />
+                    </VBox.margin>
+                </Label>
+
+                <!-- ── Username Label ── -->
+                <Label style="-fx-font-size: 13px;                             -fx-font-weight: 500;                             -fx-text-fill: #1A1A3A;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Username">
+                    <VBox.margin>
+                        <Insets bottom="6" />
+                    </VBox.margin>
+                </Label>
+
+                <!-- ── Username Field ── -->
+                <TextField fx:id="txtUsername" promptText="Enter your username" style="-fx-background-color: #F0F2FA;                             -fx-background-radius: 8;                             -fx-border-color: transparent;                             -fx-border-radius: 8;                             -fx-padding: 12 16 12 44;                             -fx-font-size: 14px;                             -fx-text-fill: #1A1A3A;                             -fx-prompt-text-fill: #A0AABF;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;">
+                    <VBox.margin>
+                        <Insets bottom="20" />
+                    </VBox.margin>
+                </TextField>
+
+                <!-- ── Password row: label + lupa ── -->
+                <HBox alignment="CENTER_LEFT">
+                    <Label style="-fx-font-size: 13px;                                 -fx-font-weight: 500;                                 -fx-text-fill: #1A1A3A;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Password">
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Hyperlink fx:id="lnkLupaPassword" onAction="#onLupaPassword" style="-fx-text-fill: #0D2B8E;                                 -fx-font-size: 13px;                                 -fx-border-color: transparent;                                 -fx-underline: false;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Lupa Password?">
+                    </Hyperlink>
+                    <VBox.margin>
+                        <Insets bottom="6" />
+                    </VBox.margin>
+                </HBox>
+
+                <!-- ── Password Field + Toggle Eye ── -->
+                <StackPane alignment="CENTER_RIGHT">
+                    <PasswordField fx:id="txtPassword" promptText="••••••••" style="-fx-background-color: #F0F2FA;                                 -fx-background-radius: 8;                                 -fx-border-color: transparent;                                 -fx-border-radius: 8;                                 -fx-padding: 12 44 12 44;                                 -fx-font-size: 14px;                                 -fx-text-fill: #1A1A3A;                                 -fx-prompt-text-fill: #A0AABF;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;                                 -fx-max-width: Infinity;">
+                    </PasswordField>
+                    <Button fx:id="btnTogglePassword" onAction="#onTogglePassword" style="-fx-background-color: transparent;                                 -fx-border-color: transparent;                                 -fx-cursor: hand;                                 -fx-font-size: 15px;                                 -fx-padding: 4 12 4 12;" text="👁">
+                        <StackPane.margin>
+                            <Insets right="4" />
+                        </StackPane.margin>
+                    </Button>
+                    <VBox.margin>
+                        <Insets bottom="24" />
+                    </VBox.margin>
+                </StackPane>
+
+                <!-- ── Login Button ── -->
+                <Button fx:id="btnLogin" maxWidth="Infinity" onAction="#onLogin" style="-fx-background-color: #0D2B8E;                             -fx-background-radius: 8;                             -fx-text-fill: white;                             -fx-font-size: 15px;                             -fx-font-weight: 600;                             -fx-cursor: hand;                             -fx-padding: 14 0 14 0;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Log In  →">
+                    <VBox.margin>
+                        <Insets bottom="28" />
+                    </VBox.margin>
+                </Button>
+
+                <!-- ── OR ASTRA ACCOUNT divider ── -->
+                <HBox alignment="CENTER" spacing="12">
+                    <Separator style="-fx-background-color: #D8DCE8;" HBox.hgrow="ALWAYS" />
+                    <Label style="-fx-font-size: 11px;                                 -fx-font-weight: 500;                                 -fx-text-fill: #A0AABF;                                 -fx-letter-spacing: 1.5px;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="OR ASTRA ACCOUNT">
+                    </Label>
+                    <Separator style="-fx-background-color: #D8DCE8;" HBox.hgrow="ALWAYS" />
+                    <VBox.margin>
+                        <Insets bottom="20" />
+                    </VBox.margin>
+                </HBox>
+
+                <!-- ── AstraTech SSO Button ── -->
+                <Button fx:id="btnAstraTech" maxWidth="Infinity" onAction="#onLoginAstraTech" style="-fx-background-color: white;                             -fx-background-radius: 8;                             -fx-border-color: #C8D0E0;                             -fx-border-radius: 8;                             -fx-border-width: 1.5;                             -fx-text-fill: #1A1A3A;                             -fx-font-size: 14px;                             -fx-font-weight: 500;                             -fx-cursor: hand;                             -fx-padding: 13 0 13 0;                             -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="  AstraTech">
+                    <VBox.margin>
+                        <Insets bottom="28" />
+                    </VBox.margin>
+                </Button>
+
+                <!-- ── Register link ── -->
+                <HBox alignment="CENTER" spacing="4">
+                    <Label style="-fx-font-size: 13px;                                 -fx-text-fill: #6070A0;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Don't have an account?">
+                    </Label>
+                    <Hyperlink fx:id="lnkRegister" onAction="#onRegister" style="-fx-text-fill: #0D2B8E;                                 -fx-font-size: 13px;                                 -fx-font-weight: 600;                                 -fx-border-color: transparent;                                 -fx-underline: false;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Register here">
+                    </Hyperlink>
+                </HBox>
+
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- ═══════════════════════════════════════════ FOOTER ════ -->
+    <bottom>
+        <BorderPane style="-fx-background-color: #E8EAF2;                     -fx-border-color: #D0D4E0;                     -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets bottom="20" left="40" right="40" top="20" />
+            </padding>
+
+            <!-- Left: tagline + copyright -->
+            <left>
+                <VBox spacing="4">
+                    <Label style="-fx-font-size: 15px;                                 -fx-font-weight: 700;                                 -fx-text-fill: #1A1A3A;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Asisten Kuliner Pribadi" />
+                    <Label style="-fx-font-size: 12px;                                 -fx-text-fill: #8090B0;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="© 2026 HIMMA Pendidikan – AstraTech. All Rights Reserved" />
+                </VBox>
+            </left>
+
+            <!-- Right: footer links -->
+            <right>
+                <HBox alignment="CENTER_RIGHT" spacing="24">
+                    <Hyperlink style="-fx-text-fill: #6070A0;                                 -fx-font-size: 13px;                                 -fx-border-color: transparent;                                 -fx-underline: false;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Terms of Service" />
+                    <Hyperlink style="-fx-text-fill: #6070A0;                                 -fx-font-size: 13px;                                 -fx-border-color: transparent;                                 -fx-underline: false;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Privacy Policy" />
+                    <Hyperlink style="-fx-text-fill: #6070A0;                                 -fx-font-size: 13px;                                 -fx-border-color: transparent;                                 -fx-underline: false;                                 -fx-font-family: 'Segoe UI', 'Arial', sans-serif;" text="Butuh Bantuan?" />
+                </HBox>
+            </right>
+        </BorderPane>
+    </bottom>
+
+</BorderPane>
