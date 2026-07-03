@@ -97,8 +97,8 @@ public class KaryawanController implements Initializable {
             }
             rs.close();
         } catch (SQLException e) {
-            tampilkanError("Gagal mengambil data karyawan (cek nama kolom di sp_GetKaryawan): " + e.getMessage(), e);
-            return; // hentikan supaya tidak lanjut ke refresh dengan data kosong/setengah
+            tampilkanError("Gagal mengambil data karyawan", e);
+            return;
         }
         halamanSekarang = 1;
         refreshTampilan();
@@ -112,7 +112,7 @@ public class KaryawanController implements Initializable {
                 rs.getString("krw_noTlpn"),
                 rs.getString("krw_jabatan"),
                 rs.getString("krw_username"),
-                "",                          // password sengaja tidak diambil, SP tidak mengembalikannya
+                "",                          // password tidak dikembalikan sp_GetKaryawan
                 rs.getString("krw_status")
         );
     }
@@ -211,26 +211,41 @@ public class KaryawanController implements Initializable {
         }
     }
 
+    // FIX #2: hapus CallableStatement yang tidak dipakai, langsung pakai PreparedStatement
     private String generateId() {
         try (Connection conn = new DBConnect().conn;
-             CallableStatement cs = conn.prepareCall("{? = CALL fn_GeneratedIdKaryawan()}")) {
-            // Jika fn_GeneratedIdKaryawan dipanggil sebagai scalar function biasa,
-            // gunakan query berikut sebagai alternatif:
-            // "SELECT dbo.fn_GeneratedIdKaryawan() AS Id_Karyawan"
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT dbo.fn_GeneratedIdKaryawan() AS Id_Karyawan")) {
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    String id = rs.getString("Id_Karyawan");
-                    rs.close();
-                    return id;
-                }
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT dbo.fn_GeneratedIdKaryawan() AS Id_Karyawan")) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String id = rs.getString("Id_Karyawan");
                 rs.close();
+                return id;
             }
+            rs.close();
         } catch (SQLException e) {
             tampilkanError("Gagal generate ID karyawan", e);
         }
         return null;
+    }
+
+    // FIX #1: ambil password lama supaya tidak ketimpa kosong saat edit
+    private String ambilPasswordLama(String idKaryawan) {
+        String sql = "SELECT krw_password FROM karyawan WHERE krw_id = ?";
+        try (Connection conn = new DBConnect().conn;
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, idKaryawan);
+            ResultSet rs = ps.executeQuery();
+            String password = null;
+            if (rs.next()) {
+                password = rs.getString("krw_password");
+            }
+            rs.close();
+            return password;
+        } catch (SQLException e) {
+            tampilkanError("Gagal mengambil password lama", e);
+            return null;
+        }
     }
 
     // ── UBAH (sp_UpdateKaryawan) ──────────────────────────────────────────
@@ -243,13 +258,25 @@ public class KaryawanController implements Initializable {
         }
         if (!validasiForm(false)) return;
 
+        // FIX #1: kalau field password dikosongkan, pakai password lama dari database
+        String passwordFinal;
+        if (txtPassword.getText().isEmpty()) {
+            passwordFinal = ambilPasswordLama(txtIdKaryawan.getText().trim());
+            if (passwordFinal == null) {
+                tampilkanPeringatan("Gagal mempertahankan password lama, silakan isi password baru.");
+                return;
+            }
+        } else {
+            passwordFinal = txtPassword.getText();
+        }
+
         Karyawan k = new Karyawan(
                 txtIdKaryawan.getText().trim(),
                 txtNamaKaryawan.getText().trim(),
                 txtNoTelp.getText().trim(),
                 cmbJabatan.getValue(),
                 txtUsername.getText().trim(),
-                txtPassword.getText(),
+                passwordFinal,
                 cmbStatus.getValue()
         );
 
@@ -357,7 +384,7 @@ public class KaryawanController implements Initializable {
         txtNoTelp.setText(dipilih.getNoTlpnKaryawan());
         cmbJabatan.setValue(dipilih.getJabatan());
         txtUsername.setText(dipilih.getUsername());
-        txtPassword.setText(dipilih.getPassword());
+        txtPassword.clear(); // FIX: jangan isi field password dengan "" yang menyesatkan — biarkan kosong, artinya "tidak diubah"
         cmbStatus.setValue(dipilih.getStatusKaryawan());
     }
 
@@ -395,11 +422,12 @@ public class KaryawanController implements Initializable {
         alert.showAndWait();
     }
 
+    // FIX #3: aman kalau e == null
     private void tampilkanError(String pesan, Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(pesan);
-        alert.setContentText(e.getMessage());
+        alert.setContentText(e != null ? e.getMessage() : "Penyebab tidak diketahui.");
         alert.showAndWait();
     }
 }
