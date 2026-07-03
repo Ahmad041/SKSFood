@@ -18,7 +18,7 @@ public class MainApp extends Application {
         URL resource = getClass().getResource(LOGIN_FXML);
         if (resource == null) {
             throw new IllegalStateException(
-                    "FXML tidak ditemukan: " + LOGIN_FXML + "\n" +
+                    "FXML tidak ditemukan: " + LOGIN_FXML + " " +
                             "Pastikan LoginView.fxml ada di:\n" +
                             "  src/main/resources/org/gui/sksfood/LoginView.fxml"
             );
