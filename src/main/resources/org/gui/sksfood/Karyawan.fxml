@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane prefHeight="1024.0" prefWidth="1432.0" style="-fx-background-color: #EEF1F8;"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.gui.sksfood.controller.KaryawanController">
+
+    <left>
+        <VBox prefWidth="260.0" spacing="0.0" style="-fx-background-color: #16214A;" BorderPane.alignment="CENTER">
+            <children>
+
+                <VBox alignment="CENTER_LEFT" spacing="0.0">
+                    <padding>
+                        <Insets bottom="24.0" left="26.0" right="20.0" top="30.0" />
+                    </padding>
+                    <children>
+                        <Label style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: WHITE; -fx-font-family: 'Georgia';" text="SKS-Food" />
+                    </children>
+                </VBox>
+
+                <Rectangle fill="#2B3B6B" height="1" style="-fx-opacity: 0.5;" width="260.0" />
+
+                <VBox spacing="4.0">
+                    <padding>
+                        <Insets bottom="10.0" left="16.0" right="16.0" top="16.0" />
+                    </padding>
+                    <children>
+
+                        <Label style="-fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #6C79A8;">
+                            <padding>
+                                <Insets bottom="4.0" left="14.0" top="8.0" />
+                            </padding>
+                            <text>MASTER DATA</text>
+                        </Label>
+
+                        <HBox fx:id="menuKaryawan" alignment="CENTER_LEFT" spacing="12.0"
+                              style="-fx-cursor: hand; -fx-background-color: #1A3A8F; -fx-background-radius: 8;">
+                            <padding>
+                                <Insets bottom="10.0" left="14.0" right="14.0" top="10.0" />
+                            </padding>
+                            <children>
+                                <Label style="-fx-font-size: 15px; -fx-text-fill: WHITE;" text="&#128100;" />
+                                <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: WHITE;" text="Karyawan" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label style="-fx-font-size: 12px; -fx-text-fill: WHITE;" text="&#8250;" />
+                            </children>
+                        </HBox>
+
+                        <HBox fx:id="menuKembali" alignment="CENTER_LEFT" spacing="12.0" style="-fx-cursor: hand; -fx-background-radius: 8;">
+                            <padding>
+                                <Insets bottom="10.0" left="14.0" right="14.0" top="10.0" />
+                            </padding>
+                            <children>
+                                <Label style="-fx-font-size: 14px; -fx-text-fill: #E05555;" text="&#8618;" />
+                                <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #E05555;" text="Kembali" />
+                            </children>
+                        </HBox>
+
+                    </children>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <Rectangle fill="#2B3B6B" height="1" style="-fx-opacity: 0.5;" width="260.0" />
+
+                <HBox fx:id="menuSettings" alignment="CENTER_LEFT" spacing="12.0" style="-fx-cursor: hand;">
+                    <padding>
+                        <Insets bottom="26.0" left="26.0" right="16.0" top="18.0" />
+                    </padding>
+                    <children>
+                        <Label style="-fx-font-size: 14px; -fx-text-fill: #AAB3D0;" text="&#9881;" />
+                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #AAB3D0;" text="Settings" />
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0;" BorderPane.alignment="CENTER">
+            <content>
+                <VBox spacing="20.0">
+                    <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="20.0" />
+                    </padding>
+                    <children>
+
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label style="-fx-font-size: 12px; -fx-text-fill: #888;" text="Master Data  &#8250;  Karyawan" />
+                                <Label style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #1A2340;" text="Data Karyawan" />
+                                <Label style="-fx-font-size: 13px; -fx-text-fill: #888;" text="Kelola data karyawan sistem SKS-Food" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="18.0" style="-fx-background-color: WHITE; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),10,0,0,2);">
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            </padding>
+                            <children>
+
+                                <HBox spacing="20.0">
+                                    <children>
+
+                                        <VBox spacing="10.0" style="-fx-background-color: #F8F9FC; -fx-border-color: #E4E8F2; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                            <padding>
+                                                <Insets bottom="16.0" left="18.0" right="18.0" top="14.0" />
+                                            </padding>
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #888;" text="TOTAL KARYAWAN" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="lblTotalKaryawan" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #1A2340;" text="0" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <Label style="-fx-font-size: 20px; -fx-text-fill: #1A3A8F;" text="&#128101;" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="10.0" style="-fx-background-color: #F8F9FC; -fx-border-color: #E4E8F2; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                            <padding>
+                                                <Insets bottom="16.0" left="18.0" right="18.0" top="14.0" />
+                                            </padding>
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #888;" text="KARYAWAN AKTIF" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="lblKaryawanAktif" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #1A2340;" text="0" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <Label style="-fx-font-size: 20px; -fx-text-fill: #2FA84F;" text="&#128100;" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="10.0" style="-fx-background-color: #F8F9FC; -fx-border-color: #E4E8F2; -fx-border-radius: 10; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                            <padding>
+                                                <Insets bottom="16.0" left="18.0" right="18.0" top="14.0" />
+                                            </padding>
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #888;" text="KARYAWAN NON AKTIF" />
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="lblKaryawanNonAktif" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #1A2340;" text="0" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <Label style="-fx-font-size: 20px; -fx-text-fill: #D63030;" text="&#128101;" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                    </children>
+                                </HBox>
+
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="16.0" style="-fx-background-color: WHITE; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),10,0,0,2);">
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            </padding>
+                            <children>
+
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <children>
+                                        <Rectangle arcHeight="4" arcWidth="4" fill="#1A3A8F" height="20" width="4" />
+                                        <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #1A3A8F;" text="Form Input Karyawan" />
+                                    </children>
+                                </HBox>
+
+                                <GridPane hgap="30.0" vgap="14.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                                        <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="34.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="34.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="34.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="34.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="ID Karyawan"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <TextField fx:id="txtIdKaryawan" editable="false"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Auto-generate"
+                                                   style="-fx-background-color: #F8F9FC; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="Nama Karyawan"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtNamaKaryawan"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Masukkan nama karyawan"
+                                                   style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="No. Telepon"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtNoTelp"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="08xxxxxxxxxx"
+                                                   style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="Jabatan"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <ComboBox fx:id="cmbJabatan"
+                                                  maxWidth="1.7976931348623157E308"
+                                                  promptText="Pilih jabatan"
+                                                  style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px;"
+                                                  GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="Username"
+                                               GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                        <TextField fx:id="txtUsername"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Masukkan username"
+                                                   style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="Password"
+                                               GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <PasswordField fx:id="txtPassword"
+                                                       maxWidth="1.7976931348623157E308"
+                                                       promptText="Masukkan password"
+                                                       style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;"
+                                                       GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                                        <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
+                                               text="Status"
+                                               GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                        <ComboBox fx:id="cmbStatus"
+                                                  maxWidth="1.7976931348623157E308"
+                                                  promptText="Pilih status"
+                                                  style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px;"
+                                                  GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <HBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Button fx:id="btnSimpan" onAction="#onSimpan" prefHeight="38" prefWidth="120"
+                                                style="-fx-background-color: #1A3A8F; -fx-text-fill: WHITE; -fx-font-size: 13px; -fx-font-weight: 700; -fx-background-radius: 6; -fx-cursor: hand;"
+                                                text="SIMPAN" />
+                                        <Button fx:id="btnUbah" onAction="#onUbah" prefHeight="38" prefWidth="110"
+                                                style="-fx-background-color: #E8A020; -fx-text-fill: WHITE; -fx-font-size: 13px; -fx-font-weight: 700; -fx-background-radius: 6; -fx-cursor: hand;"
+                                                text="UBAH" />
+                                        <Button fx:id="btnHapus" onAction="#onHapus" prefHeight="38" prefWidth="130"
+                                                style="-fx-background-color: #D63030; -fx-text-fill: WHITE; -fx-font-size: 13px; -fx-font-weight: 700; -fx-background-radius: 6; -fx-cursor: hand;"
+                                                text="HAPUS" />
+                                        <Button fx:id="btnBatal" onAction="#onBersih" prefHeight="38" prefWidth="110"
+                                                style="-fx-background-color: #A0A8B8; -fx-text-fill: WHITE; -fx-font-size: 13px; -fx-font-weight: 700; -fx-background-radius: 6; -fx-cursor: hand;"
+                                                text="BATAL" />
+                                    </children>
+                                </HBox>
+                                <HBox spacing="8.0">
+                                    <children>
+                                        <TextField fx:id="txtCari" prefHeight="38" prefWidth="260"
+                                                   promptText="Cari ID / Nama / Jabatan / Username"
+                                                   style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 14; -fx-font-size: 13px;" />
+                                        <Button onAction="#onCari" prefHeight="38" prefWidth="94"
+                                                style="-fx-background-color: #1A3A8F; -fx-text-fill: WHITE; -fx-font-size: 13px; -fx-font-weight: 700; -fx-background-radius: 6; -fx-cursor: hand;"
+                                                text="CARI" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="16.0" style="-fx-background-color: WHITE; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),10,0,0,2);">
+                            <padding>
+                                <Insets bottom="16.0" left="20.0" right="20.0" top="16.0" />
+                            </padding>
+                            <children>
+
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <children>
+                                        <Rectangle arcHeight="4" arcWidth="4" fill="#1A3A8F" height="20" width="4" />
+                                        <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #1A3A8F;" text="Daftar Karyawan" />
+                                    </children>
+                                </HBox>
+
+                                <TableView fx:id="tabelKaryawan" onMouseClicked="#onTableClick"
+                                           prefHeight="320"
+                                           style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                                           VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colId"       prefWidth="110" text="ID Karyawan" />
+                                        <TableColumn fx:id="colNama"     prefWidth="200" text="Nama Karyawan" />
+                                        <TableColumn fx:id="colNoTelp"   prefWidth="150" text="No. Telepon" />
+                                        <TableColumn fx:id="colJabatan"  prefWidth="140" text="Jabatan" />
+                                        <TableColumn fx:id="colUsername" prefWidth="150" text="Username" />
+                                        <TableColumn fx:id="colStatus"   prefWidth="120" text="Status" />
+                                    </columns>
+                                    <placeholder>
+                                        <Label style="-fx-font-size: 13px; -fx-text-fill: #AAA;" text="Tidak ada data karyawan." />
+                                    </placeholder>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+
+                                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                    <children>
+                                        <Label fx:id="lblTotal"
+                                               style="-fx-font-size: 13px; -fx-text-fill: #555; -fx-font-weight: 600;"
+                                               text="Total Data : 0"
+                                               HBox.hgrow="ALWAYS" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button onAction="#onFirstPage" prefHeight="28" prefWidth="34"
+                                                style="-fx-background-color: #F0F4FF; -fx-text-fill: #1A3A8F; -fx-font-weight: 700; -fx-background-radius: 5; -fx-cursor: hand;"
+                                                text="&#171;" />
+                                        <Button onAction="#onPrevPage" prefHeight="28" prefWidth="34"
+                                                style="-fx-background-color: #F0F4FF; -fx-text-fill: #1A3A8F; -fx-font-weight: 700; -fx-background-radius: 5; -fx-cursor: hand;"
+                                                text="&#8249;" />
+                                        <Label fx:id="lblPage" prefHeight="28" prefWidth="34"
+                                               style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: WHITE; -fx-background-color: #1A3A8F; -fx-background-radius: 5; -fx-alignment: CENTER;"
+                                               text="1" />
+                                        <Button onAction="#onNextPage" prefHeight="28" prefWidth="34"
+                                                style="-fx-background-color: #F0F4FF; -fx-text-fill: #1A3A8F; -fx-font-weight: 700; -fx-background-radius: 5; -fx-cursor: hand;"
+                                                text="&#8250;" />
+                                        <Button onAction="#onLastPage" prefHeight="28" prefWidth="34"
+                                                style="-fx-background-color: #F0F4FF; -fx-text-fill: #1A3A8F; -fx-font-weight: 700; -fx-background-radius: 5; -fx-cursor: hand;"
+                                                text="&#187;" />
+                                    </children>
+                                </HBox>
+
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
