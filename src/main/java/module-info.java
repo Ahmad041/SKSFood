@@ -11,4 +11,8 @@ module org.gui.sksfood {
     exports org.gui.sksfood;
 
     opens org.gui.sksfood.controller to javafx.fxml;
+
+    // Model/ADT perlu dibuka ke javafx.base supaya PropertyValueFactory
+    // (dipakai TableColumn.setCellValueFactory) bisa akses getter lewat reflection.
+    opens org.gui.sksfood.ADT to javafx.base;
 }
