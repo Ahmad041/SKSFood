@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.gui.sksfood.controller.DashboardController"
+            prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: #F8F9FB;">
+
+    <!-- ============================================== -->
+    <!-- LEFT SIDEBAR -->
+    <!-- ============================================== -->
+    <left>
+        <VBox prefWidth="220.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-width: 0 1 0 0;" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20.0" bottom="20.0"/>
+            </padding>
+
+            <!-- Logo SKS-Food -->
+            <Label text="SKS-Food" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;">
+                <VBox.margin>
+                    <Insets bottom="30.0" left="20.0" right="20.0"/>
+                </VBox.margin>
+            </Label>
+
+            <!-- Menu Items -->
+            <VBox spacing="2.0" VBox.vgrow="ALWAYS">
+                <!-- Active Menu -->
+                <Button text="Dashboard" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="40.0"
+                        style="-fx-background-color: #1D4ED8; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 0 20 20 0;">
+                    <padding>
+                        <Insets left="20.0"/>
+                    </padding>
+                </Button>
+
+                <!-- Kelola Data Header / Button -->
+                <HBox alignment="CENTER_LEFT" prefWidth="220.0" prefHeight="40.0" style="-fx-background-color: transparent;">
+                    <padding>
+                        <Insets left="20.0" right="20.0"/>
+                    </padding>
+                    <Label text="Kelola Data" style="-fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <!-- Placeholder icon dropdown (v) -->
+                    <Label text="▼" style="-fx-text-fill: #64748B; -fx-font-size: 10px;"/>
+                </HBox>
+
+                <!-- Sub-menus Kelola Data -->
+                <VBox spacing="2.0">
+                    <Button text="Karyawan" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                    <Button text="Menu" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                    <Button text="Pelanggan" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                    <Button text="Pemesanan" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                    <Button text="Tempat" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                    <Button text="Ulasan Menu" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="32.0"
+                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-size: 13px;">
+                        <padding>
+                            <Insets left="40.0"/>
+                        </padding>
+                    </Button>
+                </VBox>
+
+                <!-- Spacer to give some room before Kembali -->
+                <Region prefHeight="20.0" />
+
+                <!-- Kembali Button -->
+                <Button text="Kembali" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="40.0"
+                        style="-fx-background-color: transparent; -fx-text-fill: #EF4444; -fx-font-weight: bold;">
+                    <padding>
+                        <Insets left="20.0"/>
+                    </padding>
+                </Button>
+            </VBox>
+
+            <!-- Settings (Bottom) -->
+            <Button text="Settings" alignment="BASELINE_LEFT" prefWidth="220.0" prefHeight="40.0"
+                    style="-fx-background-color: transparent; -fx-text-fill: #64748B;">
+                <padding>
+                    <Insets left="20.0"/>
+                </padding>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- ============================================== -->
+    <!-- MAIN CONTENT AREA -->
+    <!-- ============================================== -->
+    <center>
+        <VBox BorderPane.alignment="CENTER">
+
+            <!-- 1. Top Navbar -->
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;">
+                <padding>
+                    <Insets left="20.0" right="20.0"/>
+                </padding>
+
+                <Label text="Dashboard Manajer" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="10.0">
+                    <VBox alignment="CENTER_RIGHT">
+                        <Label text="Rizki Pilar" style="-fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                        <Label text="KARYAWAN" style="-fx-font-size: 10px; -fx-text-fill: #94A3B8;"/>
+                    </VBox>
+                    <Region prefWidth="35.0" prefHeight="35.0" style="-fx-background-color: #0F172A; -fx-background-radius: 50%;"/>
+                </HBox>
+            </HBox>
+
+            <!-- 2. Dashboard Content -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox spacing="20.0">
+                        <padding>
+                            <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                        </padding>
+
+                        <!-- A. Summary Cards Row -->
+                        <HBox spacing="15.0">
+                            <!-- Card 1: Saldo Kas -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="160.0" prefHeight="100.0" HBox.hgrow="ALWAYS">
+                                <padding><Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/></padding>
+                                <Label text="SALDO KAS" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                <Label text="Rp." style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;">
+                                    <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                </Label>
+                            </VBox>
+
+                            <!-- Card 2: Pendapatan -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="160.0" prefHeight="100.0" HBox.hgrow="ALWAYS">
+                                <padding><Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/></padding>
+                                <Label text="PENDAPATAN" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                <Label text="Rp." style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;">
+                                    <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                </Label>
+                            </VBox>
+
+                            <!-- Card 3: Pengeluaran -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="160.0" prefHeight="100.0" HBox.hgrow="ALWAYS">
+                                <padding><Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/></padding>
+                                <Label text="PENGELUARAN" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                <Label text="Rp." style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #EF4444;">
+                                    <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                </Label>
+                            </VBox>
+
+                            <!-- Card 4: Jumlah Pesanan -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="160.0" prefHeight="100.0" HBox.hgrow="ALWAYS">
+                                <padding><Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/></padding>
+                                <Label text="JUMLAH PESANAN" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                <Label text="0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;">
+                                    <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                </Label>
+                            </VBox>
+
+                            <!-- Card 5: Ketersediaan Stok -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="160.0" prefHeight="100.0" HBox.hgrow="ALWAYS">
+                                <padding><Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/></padding>
+                                <Label text="KETERSEDIAAN STOK" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                <Label text="0%" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;">
+                                    <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                </Label>
+                            </VBox>
+                        </HBox>
+
+                        <!-- B. Main Lower Section -->
+                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+
+                            <!-- B1. Chart Area -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  HBox.hgrow="ALWAYS" prefHeight="400.0">
+                                <padding><Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/></padding>
+
+                                <HBox alignment="CENTER_LEFT">
+                                    <VBox>
+                                        <Label text="Grafik Penjualan Bulanan" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                                        <Label text="Visualisasi Total Transaksi Penjualan Jasa Fotokopi dan ATK" style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <HBox spacing="10.0" alignment="CENTER">
+                                        <Label text="Pendapatan" style="-fx-text-fill: #64748B;"/>
+                                        <Label text="Pengeluaran" style="-fx-text-fill: #64748B;"/>
+                                    </HBox>
+                                </HBox>
+
+                                <LineChart VBox.vgrow="ALWAYS" createSymbols="false">
+                                    <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                    <yAxis><NumberAxis side="LEFT" /></yAxis>
+                                </LineChart>
+
+                                <HBox spacing="50.0" style="-fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0;">
+                                    <padding><Insets top="15.0"/></padding>
+                                    <VBox>
+                                        <Label text="TOTAL OMSET BULAN INI" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                        <Label text="Rp. " style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                    </VBox>
+                                    <VBox>
+                                        <Label text="PERSENTASE KEUNTUNGAN" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                        <Label text="0%" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+
+                            <!-- B2. Order List Area -->
+                            <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 5; -fx-background-radius: 5;"
+                                  prefWidth="300.0">
+
+                                <VBox style="-fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;">
+                                    <padding><Insets top="20.0" right="20.0" bottom="15.0" left="20.0"/></padding>
+                                    <Label text="List Pesanan" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                                </VBox>
+
+                                <HBox style="-fx-background-color: #F8F9FB; -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;"
+                                      alignment="CENTER_LEFT" prefHeight="30.0">
+                                    <padding><Insets left="20.0" right="20.0"/></padding>
+                                    <Label text="DETAIL ORDER" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="STATUS" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                                </HBox>
+
+                                <VBox VBox.vgrow="ALWAYS">
+                                    <HBox style="-fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;">
+                                        <padding><Insets top="15.0" right="20.0" bottom="15.0" left="20.0"/></padding>
+                                        <VBox spacing="3.0">
+                                            <Label text="Riski" style="-fx-font-weight: bold;"/>
+                                            <Label text="Ayam Selimut" style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+                                            <Label text="Orek Kritis" style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+                                            <Label text="12:45 PM • RP. 15.000" style="-fx-font-size: 10px; -fx-text-fill: #94A3B8;">
+                                                <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                            </Label>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <VBox alignment="CENTER">
+                                            <Label text="Sedang Diproses" style="-fx-background-color: #FEF3C7; -fx-text-fill: #D97706; -fx-padding: 3 8 3 8; -fx-background-radius: 10; -fx-font-size: 10px;"/>
+                                        </VBox>
+                                    </HBox>
+
+                                    <HBox style="-fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;">
+                                        <padding><Insets top="15.0" right="20.0" bottom="15.0" left="20.0"/></padding>
+                                        <VBox spacing="3.0">
+                                            <Label text="Ferdi" style="-fx-font-weight: bold;"/>
+                                            <Label text="Nasi, Cangkang Pedes" style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+                                            <Label text="11:20 AM • RP. 50.000" style="-fx-font-size: 10px; -fx-text-fill: #94A3B8;">
+                                                <VBox.margin><Insets top="5.0"/></VBox.margin>
+                                            </Label>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <VBox alignment="CENTER">
+                                            <Label text="Sedang Diantar" style="-fx-background-color: #D1FAE5; -fx-text-fill: #059669; -fx-padding: 3 8 3 8; -fx-background-radius: 10; -fx-font-size: 10px;"/>
+                                        </VBox>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+
+                        </HBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

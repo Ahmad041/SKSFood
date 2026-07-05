@@ -29,6 +29,8 @@ public class Menu {
         this.statusMenu        = statusMenu;
     }
 
+
+
     // ── Getter ────────────────────────────────────────────────────────
     public String getIdMenu()            { return idMenu; }
     public String getNamaMenu()          { return namaMenu; }
