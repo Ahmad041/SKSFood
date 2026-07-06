@@ -259,11 +259,10 @@
                                         <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;"
                                                text="Status"
                                                GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                        <ComboBox fx:id="cmbStatus"
-                                                  maxWidth="1.7976931348623157E308"
-                                                  promptText="Pilih status"
-                                                  style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px;"
-                                                  GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtStatus" editable="false"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   style="-fx-background-color: #F0F0F0; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px; -fx-text-fill: #888;"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
                                     </children>
                                 </GridPane>
