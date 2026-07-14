@@ -1,5 +1,6 @@
 package org.gui.sksfood.ADT;
 
+import java.time.LocalDateTime;
 
 public class Pelanggan {
 
@@ -7,22 +8,22 @@ public class Pelanggan {
     private String nama;
     private String noTelp;
     private String email;
-    private String password;
     private String departemen;
     private String statusAkun;
+    private LocalDateTime createDate;
 
     public Pelanggan() {
     }
 
     public Pelanggan(String id, String nama, String noTelp, String email,
-                     String password, String departemen, String statusAkun) {
+                     String departemen, String statusAkun, LocalDateTime createDate) {
         this.id = id;
         this.nama = nama;
         this.noTelp = noTelp;
         this.email = email;
-        this.password = password;
         this.departemen = departemen;
         this.statusAkun = statusAkun;
+        this.createDate = createDate;
     }
 
     public String getId() {
@@ -57,14 +58,6 @@ public class Pelanggan {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getDepartemen() {
         return departemen;
     }
@@ -79,5 +72,13 @@ public class Pelanggan {
 
     public void setStatusAkun(String statusAkun) {
         this.statusAkun = statusAkun;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 }

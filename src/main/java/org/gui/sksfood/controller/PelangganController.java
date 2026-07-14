@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -22,7 +24,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -61,11 +62,11 @@ public class PelangganController implements Initializable {
     @FXML
     private TextField txtEmail;
     @FXML
-    private PasswordField txtPassword;
-    @FXML
     private ComboBox<String> cmbDepartemen;
     @FXML
     private ComboBox<String> cmbStatusAkun;
+    @FXML
+    private Label lblStatusAkun; // dipakai untuk sembunyikan label + combo bersamaan
 
     // ================= Tombol Aksi =================
     @FXML
@@ -79,9 +80,15 @@ public class PelangganController implements Initializable {
     @FXML
     private Button btnCari;
 
-    // ================= Pencarian =================
+    // ================= Pencarian, Sorting, Filter =================
     @FXML
     private TextField txtCari;
+    @FXML
+    private ComboBox<String> cmbUrutkan;
+    @FXML
+    private ComboBox<String> cmbFilterStatus;
+    @FXML
+    private ComboBox<String> cmbFilterDepartemen;
 
     // ================= Tabel =================
     @FXML
@@ -94,8 +101,6 @@ public class PelangganController implements Initializable {
     private TableColumn<Pelanggan, String> colNoTelp;
     @FXML
     private TableColumn<Pelanggan, String> colEmail;
-    @FXML
-    private TableColumn<Pelanggan, String> colPassword;
     @FXML
     private TableColumn<Pelanggan, String> colDepartemen;
     @FXML
@@ -111,8 +116,13 @@ public class PelangganController implements Initializable {
     private static final String PREFIX_ID = "PLG";
     private static final int PANJANG_ID = 4; // PLG0001 -> 4 digit angka
     private static final int MAX_DIGIT_TELP = 13;
-    private static final int PANJANG_PASSWORD = 8;
     private static final int ROW_PER_PAGE = 10;
+
+    private static final String SORT_TERBARU = "Terbaru (Default)";
+    private static final String SORT_ID_DESC = "ID Descending";
+    private static final String FILTER_SEMUA = "Semua";
+    private static final String STATUS_NON_AKTIF = "Non Aktif";
+    private static final String STATUS_AKTIF = "Aktif";
 
     private final ObservableList<Pelanggan> masterData = FXCollections.observableArrayList();
     private ObservableList<Pelanggan> filteredData = FXCollections.observableArrayList();
@@ -121,18 +131,12 @@ public class PelangganController implements Initializable {
     private int totalPage = 1;
 
     private final List<String> daftarDepartemen = List.of(
-            "Badan Kepengurusan Harian",
-            "Departemen Acara",
-            "Departemen Big Circle",
-            "Departemen Minat Bakat",
-            "Departemen Pendidikan",
-            "Departemen PHD",
-            "Departemen PSDM-O"
+            "PSI", "DKA", "DA3", "UPT", "UPTIF"
     );
 
     private final List<String> daftarStatusAkun = List.of(
-            "Aktif",
-            "Non Aktif"
+            STATUS_AKTIF,
+            STATUS_NON_AKTIF
     );
 
     @Override
@@ -140,10 +144,13 @@ public class PelangganController implements Initializable {
         setupComboBox();
         setupNoTelpFormatter();
         setupTabel();
+        setupValidasiTombolSimpan(); // (#baru) simpan hanya aktif kalau form sudah terisi
         muatDataDariDatabase();
-        tampilkanHalaman(1);
+        sembunyikanStatusAkun(); // (#3) form "tambah baru" -> status disembunyikan
+        perbaruiTampilan();
         perbaruiStatistik();
         generateIdBaru();
+        perbaruiTombolSimpan();
     }
 
     // =====================================================================
@@ -153,11 +160,36 @@ public class PelangganController implements Initializable {
     private void setupComboBox() {
         cmbDepartemen.setItems(FXCollections.observableArrayList(daftarDepartemen));
         cmbStatusAkun.setItems(FXCollections.observableArrayList(daftarStatusAkun));
-        cmbStatusAkun.getSelectionModel().select("Aktif");
+        cmbStatusAkun.getSelectionModel().select(STATUS_AKTIF);
+        // (#baru) status akun tidak lagi bisa diubah lewat form, combo hanya
+        // dipakai untuk MENAMPILKAN status saat mode edit -> selalu non-interaktif.
+        cmbStatusAkun.setDisable(true);
+        cmbStatusAkun.setMouseTransparent(true);
+        cmbStatusAkun.setFocusTraversable(false);
+
+        // (#5/#6) opsi sorting
+        cmbUrutkan.setItems(FXCollections.observableArrayList(SORT_TERBARU, SORT_ID_DESC));
+        cmbUrutkan.getSelectionModel().select(SORT_TERBARU);
+        cmbUrutkan.valueProperty().addListener((obs, lama, baru) -> perbaruiTampilan());
+
+        // (#7) filter status & departemen
+        List<String> opsiFilterStatus = new ArrayList<>();
+        opsiFilterStatus.add(FILTER_SEMUA);
+        opsiFilterStatus.addAll(daftarStatusAkun);
+        cmbFilterStatus.setItems(FXCollections.observableArrayList(opsiFilterStatus));
+        cmbFilterStatus.getSelectionModel().select(FILTER_SEMUA);
+        cmbFilterStatus.valueProperty().addListener((obs, lama, baru) -> perbaruiTampilan());
+
+        List<String> opsiFilterDept = new ArrayList<>();
+        opsiFilterDept.add(FILTER_SEMUA);
+        opsiFilterDept.addAll(daftarDepartemen);
+        cmbFilterDepartemen.setItems(FXCollections.observableArrayList(opsiFilterDept));
+        cmbFilterDepartemen.getSelectionModel().select(FILTER_SEMUA);
+        cmbFilterDepartemen.valueProperty().addListener((obs, lama, baru) -> perbaruiTampilan());
     }
 
     /**
-     * No. Telepon: hanya angka, maksimal 13 digit.
+     * No. Telepon: hanya angka, maksimal 13 digit. (#2)
      */
     private void setupNoTelpFormatter() {
         TextFormatter<String> formatter = new TextFormatter<>(change -> {
@@ -178,9 +210,30 @@ public class PelangganController implements Initializable {
         colNama.setCellValueFactory(new PropertyValueFactory<>("nama"));
         colNoTelp.setCellValueFactory(new PropertyValueFactory<>("noTelp"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
         colDepartemen.setCellValueFactory(new PropertyValueFactory<>("departemen"));
         colStatusAkun.setCellValueFactory(new PropertyValueFactory<>("statusAkun"));
+    }
+
+    /**
+     * (#baru) Tombol SIMPAN hanya bisa ditekan kalau semua field wajib
+     * (nama, no telp, email, departemen) sudah terisi. Dipasang sebagai
+     * listener supaya statusnya selalu update live saat user mengetik.
+     */
+    private void setupValidasiTombolSimpan() {
+        txtNamaPelanggan.textProperty().addListener((obs, lama, baru) -> perbaruiTombolSimpan());
+        txtNoTelp.textProperty().addListener((obs, lama, baru) -> perbaruiTombolSimpan());
+        txtEmail.textProperty().addListener((obs, lama, baru) -> perbaruiTombolSimpan());
+        cmbDepartemen.valueProperty().addListener((obs, lama, baru) -> perbaruiTombolSimpan());
+    }
+
+    private void perbaruiTombolSimpan() {
+        boolean namaTerisi = txtNamaPelanggan.getText() != null && !txtNamaPelanggan.getText().trim().isEmpty();
+        boolean noTelpTerisi = txtNoTelp.getText() != null && !txtNoTelp.getText().trim().isEmpty();
+        boolean emailTerisi = txtEmail.getText() != null && !txtEmail.getText().trim().isEmpty();
+        boolean deptTerisi = cmbDepartemen.getValue() != null;
+
+        boolean semuaTerisi = namaTerisi && noTelpTerisi && emailTerisi && deptTerisi;
+        btnSimpan.setDisable(!semuaTerisi);
     }
 
     // =====================================================================
@@ -189,30 +242,29 @@ public class PelangganController implements Initializable {
 
     private void muatDataDariDatabase() {
         masterData.clear();
-        String sql = "SELECT plg_id, plg_nama, plg_noTlpn, plg_email, plg_password, "
-                + "plg_departemen, plg_statusAkun FROM pelanggan ORDER BY plg_id ASC";
+        String sql = "SELECT plg_id, plg_nama, plg_noTlpn, plg_email, "
+                + "plg_departemen, plg_statusAkun, plg_createDate FROM pelanggan ORDER BY plg_id ASC";
 
         try (Connection conn = bukaKoneksi();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                Timestamp ts = rs.getTimestamp("plg_createDate");
                 Pelanggan p = new Pelanggan(
                         rs.getString("plg_id"),
                         rs.getString("plg_nama"),
                         rs.getString("plg_noTlpn"),
                         rs.getString("plg_email"),
-                        rs.getString("plg_password"),
                         rs.getString("plg_departemen"),
-                        rs.getString("plg_statusAkun")
+                        rs.getString("plg_statusAkun"),
+                        ts == null ? null : ts.toLocalDateTime()
                 );
                 masterData.add(p);
             }
         } catch (SQLException e) {
             tampilkanPeringatan("Gagal memuat data pelanggan: " + e.getMessage());
         }
-
-        filteredData = FXCollections.observableArrayList(masterData);
     }
 
     // =====================================================================
@@ -246,8 +298,12 @@ public class PelangganController implements Initializable {
     private boolean validasiForm() {
         StringBuilder pesan = new StringBuilder();
 
-        if (txtNamaPelanggan.getText() == null || txtNamaPelanggan.getText().trim().isEmpty()) {
+        String nama = txtNamaPelanggan.getText();
+        if (nama == null || nama.trim().isEmpty()) {
             pesan.append("- Nama pelanggan wajib diisi.\n");
+        } else if (isNamaSudahDipakai(nama.trim(), txtIdPelanggan.getText())) {
+            // (#1) validasi nama/username tidak boleh sama
+            pesan.append("- Nama pelanggan sudah digunakan, silakan gunakan nama lain.\n");
         }
 
         String noTelp = txtNoTelp.getText();
@@ -265,20 +321,12 @@ public class PelangganController implements Initializable {
             pesan.append("- Email harus menggunakan format ...@gmail.com\n");
         }
 
-        String password = txtPassword.getText();
-        if (password == null || password.isEmpty()) {
-            pesan.append("- Password wajib diisi.\n");
-        } else if (password.length() != PANJANG_PASSWORD) {
-            pesan.append("- Password harus berisi tepat ").append(PANJANG_PASSWORD).append(" karakter.\n");
-        }
-
         if (cmbDepartemen.getValue() == null) {
             pesan.append("- Departemen wajib dipilih.\n");
         }
 
-        if (cmbStatusAkun.getValue() == null) {
-            pesan.append("- Status akun wajib dipilih.\n");
-        }
+        // (#baru) status akun tidak lagi diinput lewat form (read-only / otomatis),
+        // jadi tidak perlu divalidasi di sini.
 
         if (pesan.length() > 0) {
             tampilkanPeringatan(pesan.toString());
@@ -293,21 +341,53 @@ public class PelangganController implements Initializable {
         return Pattern.matches(regex, email.trim());
     }
 
+    /**
+     * (#1) Cek apakah nama pelanggan sudah dipakai oleh data lain (selain id yang
+     * sedang diedit). Dicek langsung ke database supaya konsisten walau ada
+     * banyak instance aplikasi yang jalan bersamaan.
+     */
+    private boolean isNamaSudahDipakai(String nama, String idSaatIni) {
+        String sql = "SELECT COUNT(*) AS jumlah FROM pelanggan WHERE LOWER(plg_nama) = LOWER(?) AND plg_id <> ?";
+
+        try (Connection conn = bukaKoneksi();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nama);
+            ps.setString(2, idSaatIni == null ? "" : idSaatIni);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("jumlah") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            tampilkanPeringatan("Gagal memeriksa nama pelanggan: " + e.getMessage());
+        }
+        return false;
+    }
+
     // =====================================================================
     // CRUD - SIMPAN
     // =====================================================================
 
     @FXML
     private void onSimpan(ActionEvent event) {
+        // (#3) mode tambah baru -> status akun tidak ditampilkan, default "Aktif"
+        if (!cmbStatusAkun.isVisible()) {
+            cmbStatusAkun.setValue(STATUS_AKTIF);
+        }
+
         if (!validasiForm()) {
             return;
         }
 
-        // plg_createBy & plg_createDate wajib diisi (NOT NULL di tabel).
+        // (#baru) password sudah dihapus total dari form & tabel, plg_password
+        // tidak lagi diisi di sini. Pastikan kolom plg_password sudah dihapus
+        // (atau dibuat nullable/ada default) di sisi database.
         String sql = "INSERT INTO pelanggan "
-                + "(plg_id, plg_nama, plg_noTlpn, plg_email, plg_password, plg_departemen, plg_statusAkun, "
+                + "(plg_id, plg_nama, plg_noTlpn, plg_email, plg_departemen, plg_statusAkun, "
                 + "plg_createBy, plg_createDate) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE())";
 
         try (Connection conn = bukaKoneksi();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -316,10 +396,9 @@ public class PelangganController implements Initializable {
             ps.setString(2, txtNamaPelanggan.getText().trim());
             ps.setString(3, txtNoTelp.getText().trim());
             ps.setString(4, txtEmail.getText().trim());
-            ps.setString(5, txtPassword.getText());
-            ps.setString(6, cmbDepartemen.getValue());
-            ps.setString(7, cmbStatusAkun.getValue());
-            ps.setString(8, getUserLoginSaatIni());
+            ps.setString(5, cmbDepartemen.getValue());
+            ps.setString(6, cmbStatusAkun.getValue());
+            ps.setString(7, getUserLoginSaatIni());
 
             ps.executeUpdate();
 
@@ -347,9 +426,10 @@ public class PelangganController implements Initializable {
             return;
         }
 
-        // plg_modifBy & plg_modifDate ikut diupdate setiap kali data diubah.
+        // (#baru) status akun TIDAK diubah dari sini karena sudah read-only di form;
+        // hanya nama, no telp, email, departemen yang bisa diubah lewat UBAH.
         String sql = "UPDATE pelanggan SET plg_nama = ?, plg_noTlpn = ?, plg_email = ?, "
-                + "plg_password = ?, plg_departemen = ?, plg_statusAkun = ?, "
+                + "plg_departemen = ?, "
                 + "plg_modifBy = ?, plg_modifDate = GETDATE() WHERE plg_id = ?";
 
         try (Connection conn = bukaKoneksi();
@@ -358,11 +438,9 @@ public class PelangganController implements Initializable {
             ps.setString(1, txtNamaPelanggan.getText().trim());
             ps.setString(2, txtNoTelp.getText().trim());
             ps.setString(3, txtEmail.getText().trim());
-            ps.setString(4, txtPassword.getText());
-            ps.setString(5, cmbDepartemen.getValue());
-            ps.setString(6, cmbStatusAkun.getValue());
-            ps.setString(7, getUserLoginSaatIni());
-            ps.setString(8, txtIdPelanggan.getText());
+            ps.setString(4, cmbDepartemen.getValue());
+            ps.setString(5, getUserLoginSaatIni());
+            ps.setString(6, txtIdPelanggan.getText());
 
             int baris = ps.executeUpdate();
 
@@ -380,7 +458,7 @@ public class PelangganController implements Initializable {
     }
 
     // =====================================================================
-    // CRUD - HAPUS
+    // CRUD - HAPUS (SOFT DELETE)
     // =====================================================================
 
     @FXML
@@ -393,7 +471,7 @@ public class PelangganController implements Initializable {
         Alert konfirmasi = new Alert(AlertType.CONFIRMATION);
         konfirmasi.setTitle("Konfirmasi Hapus");
         konfirmasi.setHeaderText(null);
-        konfirmasi.setContentText("Apakah Anda yakin ingin menghapus data pelanggan "
+        konfirmasi.setContentText("Apakah Anda yakin ingin menghapus (menonaktifkan) data pelanggan "
                 + txtIdPelanggan.getText() + "?");
 
         konfirmasi.showAndWait().ifPresent(respon -> {
@@ -403,17 +481,27 @@ public class PelangganController implements Initializable {
         });
     }
 
+    /**
+     * (#baru) HAPUS tidak lagi menghapus baris dari tabel (hard delete),
+     * melainkan hanya mengubah plg_statusAkun menjadi "Non Aktif" (soft delete).
+     * Data tetap ada di database untuk keperluan histori/audit, dan otomatis
+     * akan ditampilkan paling bawah pada daftar (lihat #8 di perbaruiTampilan()).
+     */
     private void hapusDariDatabase(String id) {
-        String sql = "DELETE FROM pelanggan WHERE plg_id = ?";
+        String sql = "UPDATE pelanggan SET plg_statusAkun = ?, plg_modifBy = ?, plg_modifDate = GETDATE() "
+                + "WHERE plg_id = ?";
 
         try (Connection conn = bukaKoneksi();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, id);
+            ps.setString(1, STATUS_NON_AKTIF);
+            ps.setString(2, getUserLoginSaatIni());
+            ps.setString(3, id);
+
             int baris = ps.executeUpdate();
 
             if (baris > 0) {
-                tampilkanInfo("Data pelanggan berhasil dihapus.");
+                tampilkanInfo("Data pelanggan berhasil dihapus (dinonaktifkan).");
                 muatUlangSemua();
                 bersihkanForm();
             } else {
@@ -438,36 +526,136 @@ public class PelangganController implements Initializable {
         txtNamaPelanggan.clear();
         txtNoTelp.clear();
         txtEmail.clear();
-        txtPassword.clear();
         cmbDepartemen.getSelectionModel().clearSelection();
-        cmbStatusAkun.getSelectionModel().select("Aktif");
+        cmbStatusAkun.getSelectionModel().select(STATUS_AKTIF);
+        sembunyikanStatusAkun(); // (#3) kembali ke mode tambah baru -> status disembunyikan
         tabelPelanggan.getSelectionModel().clearSelection();
         generateIdBaru();
+        perbaruiTombolSimpan();
     }
 
     // =====================================================================
-    // PENCARIAN
+    // (#3) TAMPIL/SEMBUNYI STATUS AKUN
+    // =====================================================================
+
+    private void sembunyikanStatusAkun() {
+        cmbStatusAkun.setVisible(false);
+        cmbStatusAkun.setManaged(false);
+        if (lblStatusAkun != null) {
+            lblStatusAkun.setVisible(false);
+            lblStatusAkun.setManaged(false);
+        }
+    }
+
+    private void tampilkanStatusAkunUntukEdit() {
+        cmbStatusAkun.setVisible(true);
+        cmbStatusAkun.setManaged(true);
+        // (#baru) status akun hanya ditampilkan sebagai info, tidak bisa diedit
+        // lewat form ini lagi -> tetap disabled/non-interaktif.
+        cmbStatusAkun.setDisable(true);
+        cmbStatusAkun.setMouseTransparent(true);
+        if (lblStatusAkun != null) {
+            lblStatusAkun.setVisible(true);
+            lblStatusAkun.setManaged(true);
+        }
+    }
+
+    // =====================================================================
+    // PENCARIAN (#4, #9)
     // =====================================================================
 
     @FXML
     private void onCari(ActionEvent event) {
-        String kataKunci = txtCari.getText() == null ? "" : txtCari.getText().trim().toLowerCase();
+        perbaruiTampilan();
+    }
 
-        if (kataKunci.isEmpty()) {
-            filteredData = FXCollections.observableArrayList(masterData);
-        } else {
-            List<Pelanggan> hasil = new ArrayList<>();
-            for (Pelanggan p : masterData) {
-                if (p.getId().toLowerCase().contains(kataKunci)
-                        || p.getNama().toLowerCase().contains(kataKunci)
-                        || (p.getEmail() != null && p.getEmail().toLowerCase().contains(kataKunci))) {
-                    hasil.add(p);
-                }
+    // =====================================================================
+    // (#5, #6, #7, #8) SORTING + FILTER + PENCARIAN DIGABUNG DI SATU PIPELINE
+    // =====================================================================
+
+    private void perbaruiTampilan() {
+        String kataKunci = txtCari.getText() == null ? "" : txtCari.getText().trim().toLowerCase();
+        String filterStatus = cmbFilterStatus.getValue();
+        String filterDept = cmbFilterDepartemen.getValue();
+        String urutan = cmbUrutkan.getValue();
+
+        List<Pelanggan> hasil = new ArrayList<>();
+        for (Pelanggan p : masterData) {
+            // (#4, #9) cari berdasarkan ID, Nama, atau No. Telepon saja.
+            // Pencarian nama pakai "contains" (substring) terhadap nama lengkap,
+            // sehingga otomatis bisa menemukan lewat nama depan, tengah, ATAU
+            // belakang -- misalnya "budi santoso wijaya" tetap ketemu walau
+            // yang diketik "santoso" (nama tengah) atau "wijaya" (nama belakang).
+            boolean cocokCari = kataKunci.isEmpty()
+                    || mengandung(p.getId(), kataKunci)
+                    || cocokNama(p.getNama(), kataKunci)
+                    || mengandung(p.getNoTelp(), kataKunci);
+
+            // (#7) filter status & departemen
+            boolean cocokStatus = filterStatus == null || FILTER_SEMUA.equals(filterStatus)
+                    || filterStatus.equalsIgnoreCase(p.getStatusAkun());
+            boolean cocokDept = filterDept == null || FILTER_SEMUA.equals(filterDept)
+                    || filterDept.equalsIgnoreCase(p.getDepartemen());
+
+            if (cocokCari && cocokStatus && cocokDept) {
+                hasil.add(p);
             }
-            filteredData = FXCollections.observableArrayList(hasil);
         }
 
+        // (#6) sorting: terbaru (createDate desc) atau ID descending
+        Comparator<Pelanggan> comparator;
+        if (SORT_ID_DESC.equals(urutan)) {
+            comparator = Comparator.comparing(Pelanggan::getId, Comparator.nullsLast(Comparator.reverseOrder()));
+        } else {
+            comparator = Comparator.comparing(
+                    Pelanggan::getCreateDate,
+                    Comparator.nullsLast(Comparator.reverseOrder())
+            );
+        }
+        hasil.sort(comparator);
+
+        // (#8) data dengan status "Non Aktif" (termasuk hasil soft delete) selalu
+        // ditaruh paling bawah, tanpa merusak urutan sorting di masing-masing kelompok.
+        List<Pelanggan> aktif = new ArrayList<>();
+        List<Pelanggan> nonAktif = new ArrayList<>();
+        for (Pelanggan p : hasil) {
+            if (STATUS_NON_AKTIF.equalsIgnoreCase(p.getStatusAkun())) {
+                nonAktif.add(p);
+            } else {
+                aktif.add(p);
+            }
+        }
+        List<Pelanggan> gabungan = new ArrayList<>(aktif);
+        gabungan.addAll(nonAktif);
+
+        filteredData = FXCollections.observableArrayList(gabungan);
         tampilkanHalaman(1);
+    }
+
+    private boolean mengandung(String sumber, String kataKunci) {
+        return sumber != null && sumber.toLowerCase().contains(kataKunci);
+    }
+
+    /**
+     * (#baru) Pencarian nama: dicocokkan terhadap nama lengkap sebagai substring,
+     * DAN terhadap tiap kata (token) di nama tersebut secara terpisah. Dengan
+     * begitu nama depan, tengah, maupun belakang semuanya bisa ditemukan,
+     * termasuk pencarian sebagian kata di tengah nama.
+     */
+    private boolean cocokNama(String namaLengkap, String kataKunci) {
+        if (namaLengkap == null) {
+            return false;
+        }
+        String namaLower = namaLengkap.toLowerCase();
+        if (namaLower.contains(kataKunci)) {
+            return true;
+        }
+        for (String bagian : namaLower.split("\\s+")) {
+            if (bagian.contains(kataKunci)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // =====================================================================
@@ -485,9 +673,13 @@ public class PelangganController implements Initializable {
         txtNamaPelanggan.setText(dipilih.getNama());
         txtNoTelp.setText(dipilih.getNoTelp());
         txtEmail.setText(dipilih.getEmail());
-        txtPassword.setText(dipilih.getPassword());
         cmbDepartemen.setValue(dipilih.getDepartemen());
+
+        // (#3) mode edit -> status akun ditampilkan (read-only, lihat #baru)
+        tampilkanStatusAkunUntukEdit();
         cmbStatusAkun.setValue(dipilih.getStatusAkun());
+
+        perbaruiTombolSimpan();
     }
 
     // =====================================================================
@@ -550,7 +742,7 @@ public class PelangganController implements Initializable {
     private void perbaruiStatistik() {
         int total = masterData.size();
         long aktif = masterData.stream()
-                .filter(p -> "Aktif".equalsIgnoreCase(p.getStatusAkun()))
+                .filter(p -> STATUS_AKTIF.equalsIgnoreCase(p.getStatusAkun()))
                 .count();
         long nonAktif = total - aktif;
 
@@ -593,7 +785,7 @@ public class PelangganController implements Initializable {
 
     private void muatUlangSemua() {
         muatDataDariDatabase();
-        tampilkanHalaman(currentPage);
+        perbaruiTampilan();
         perbaruiStatistik();
     }
 

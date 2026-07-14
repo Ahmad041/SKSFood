@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class MainApp extends Application {
 
-    private static final String LOGIN_FXML = "/org/gui/sksfood/LoginView.fxml";
+    private static final String LOGIN_FXML = "/org/gui/sksfood/Tempat.fxml";
 
     // Disimpan sebagai static supaya bisa diakses dari controller manapun
     // lewat MainApp.switchScene(...)
