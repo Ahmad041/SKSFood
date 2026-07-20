@@ -124,11 +124,29 @@ public class PelangganController implements Initializable {
     private static final String STATUS_NON_AKTIF = "Non Aktif";
     private static final String STATUS_AKTIF = "Aktif";
 
+    // (#baru) Daftar domain email yang diizinkan.
+    private static final List<String> DOMAIN_EMAIL_DIIZINKAN = List.of(
+            "gmail.com",
+            "yahoo.com",
+            "outlook.com",
+            "hotmail.com",
+            "live.com",
+            "icloud.com",
+            "mail.com",
+            "yandex.com",
+            "polytechnic.astra.ac.id"
+    );
+
     private final ObservableList<Pelanggan> masterData = FXCollections.observableArrayList();
     private ObservableList<Pelanggan> filteredData = FXCollections.observableArrayList();
 
     private int currentPage = 1;
     private int totalPage = 1;
+
+    // (#baru) menandai apakah form sedang dalam mode edit (baris tabel sudah
+    // diklik) atau mode tambah baru. Dipakai untuk mengatur aktif/nonaktif
+    // tombol SIMPAN, UBAH, dan HAPUS.
+    private boolean modeEdit = false;
 
     private final List<String> daftarDepartemen = List.of(
             "PSI", "DKA", "DA3", "UPT", "UPTIF"
@@ -142,6 +160,7 @@ public class PelangganController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupComboBox();
+        setupNamaFormatter();  // (#baru) nama tidak boleh diisi angka
         setupNoTelpFormatter();
         setupTabel();
         setupValidasiTombolSimpan(); // (#baru) simpan hanya aktif kalau form sudah terisi
@@ -189,6 +208,26 @@ public class PelangganController implements Initializable {
     }
 
     /**
+     * (#baru) Nama Pelanggan: hanya boleh huruf dan spasi, tidak boleh
+     * diisi angka maupun simbol. \p{L} mencakup huruf dari berbagai alfabet
+     * (termasuk huruf ber-diakritik), sehingga nama seperti "Renata" tetap
+     * diterima secara wajar.
+     */
+    private void setupNamaFormatter() {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.isEmpty()) {
+                return change;
+            }
+            if (!newText.matches("[\\p{L} ]*")) {
+                return null; // tolak perubahan (angka atau simbol lain)
+            }
+            return change;
+        });
+        txtNamaPelanggan.setTextFormatter(formatter);
+    }
+
+    /**
      * No. Telepon: hanya angka, maksimal 13 digit. (#2)
      */
     private void setupNoTelpFormatter() {
@@ -226,6 +265,16 @@ public class PelangganController implements Initializable {
         cmbDepartemen.valueProperty().addListener((obs, lama, baru) -> perbaruiTombolSimpan());
     }
 
+    /**
+     * (#baru) Mengatur aktif/nonaktif tombol SIMPAN, UBAH, dan HAPUS:
+     * - SIMPAN aktif hanya pada mode tambah baru (belum ada baris tabel yang
+     *   diklik) DAN semua field wajib (nama, no telp, email, departemen)
+     *   sudah terisi.
+     * - UBAH & HAPUS aktif hanya pada mode edit, yaitu setelah sebuah baris
+     *   pada tabel diklik.
+     * - BATAL selalu aktif, tidak pernah di-disable maupun di-enable secara
+     *   kondisional.
+     */
     private void perbaruiTombolSimpan() {
         boolean namaTerisi = txtNamaPelanggan.getText() != null && !txtNamaPelanggan.getText().trim().isEmpty();
         boolean noTelpTerisi = txtNoTelp.getText() != null && !txtNoTelp.getText().trim().isEmpty();
@@ -233,7 +282,11 @@ public class PelangganController implements Initializable {
         boolean deptTerisi = cmbDepartemen.getValue() != null;
 
         boolean semuaTerisi = namaTerisi && noTelpTerisi && emailTerisi && deptTerisi;
-        btnSimpan.setDisable(!semuaTerisi);
+
+        btnSimpan.setDisable(modeEdit || !semuaTerisi);
+        btnUbah.setDisable(!modeEdit);
+        btnHapus.setDisable(!modeEdit);
+        btnBatal.setDisable(false);
     }
 
     // =====================================================================
@@ -301,6 +354,9 @@ public class PelangganController implements Initializable {
         String nama = txtNamaPelanggan.getText();
         if (nama == null || nama.trim().isEmpty()) {
             pesan.append("- Nama pelanggan wajib diisi.\n");
+        } else if (!isNamaFormatValid(nama)) {
+            // (#baru) validasi format: nama tidak boleh mengandung angka/simbol
+            pesan.append("- Nama pelanggan hanya boleh berisi huruf dan spasi (tidak boleh angka).\n");
         } else if (isNamaSudahDipakai(nama.trim(), txtIdPelanggan.getText())) {
             // (#1) validasi nama/username tidak boleh sama
             pesan.append("- Nama pelanggan sudah digunakan, silakan gunakan nama lain.\n");
@@ -317,8 +373,10 @@ public class PelangganController implements Initializable {
         String email = txtEmail.getText();
         if (email == null || email.trim().isEmpty()) {
             pesan.append("- Email wajib diisi.\n");
-        } else if (!isEmailGmailValid(email)) {
-            pesan.append("- Email harus menggunakan format ...@gmail.com\n");
+        } else if (!isEmailValid(email)) {
+            pesan.append("- Email harus menggunakan salah satu domain berikut: ")
+                    .append(String.join(", ", DOMAIN_EMAIL_DIIZINKAN))
+                    .append("\n");
         }
 
         if (cmbDepartemen.getValue() == null) {
@@ -335,9 +393,25 @@ public class PelangganController implements Initializable {
         return true;
     }
 
-    private boolean isEmailGmailValid(String email) {
-        // Format umum email + wajib diakhiri @gmail.com
-        String regex = "^[A-Za-z0-9._%+-]+@gmail\\.com$";
+    /**
+     * (#baru) Validasi format nama: hanya huruf dan spasi yang diizinkan.
+     * Ini validasi jaga-jaga di lapisan submit, selain TextFormatter yang
+     * sudah mencegah pengetikan angka/simbol secara real-time.
+     */
+    private boolean isNamaFormatValid(String nama) {
+        return nama.trim().matches("[\\p{L} ]+");
+    }
+
+    /**
+     * (#baru) Validasi email: harus berformat umum email DAN domainnya
+     * termasuk salah satu dari daftar domain yang diizinkan.
+     */
+    private boolean isEmailValid(String email) {
+        String domainRegex = String.join("|",
+                DOMAIN_EMAIL_DIIZINKAN.stream()
+                        .map(d -> d.replace(".", "\\."))
+                        .toArray(String[]::new));
+        String regex = "^[A-Za-z0-9._%+-]+@(" + domainRegex + ")$";
         return Pattern.matches(regex, email.trim());
     }
 
@@ -530,6 +604,7 @@ public class PelangganController implements Initializable {
         cmbStatusAkun.getSelectionModel().select(STATUS_AKTIF);
         sembunyikanStatusAkun(); // (#3) kembali ke mode tambah baru -> status disembunyikan
         tabelPelanggan.getSelectionModel().clearSelection();
+        modeEdit = false; // (#baru) kembali ke mode tambah baru
         generateIdBaru();
         perbaruiTombolSimpan();
     }
@@ -679,6 +754,9 @@ public class PelangganController implements Initializable {
         tampilkanStatusAkunUntukEdit();
         cmbStatusAkun.setValue(dipilih.getStatusAkun());
 
+        // (#baru) baris tabel sudah diklik -> masuk mode edit, ini yang
+        // membuat UBAH & HAPUS aktif dan SIMPAN nonaktif.
+        modeEdit = true;
         perbaruiTombolSimpan();
     }
 

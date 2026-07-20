@@ -155,7 +155,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="8.0">
                            <children>
                               <Rectangle arcHeight="4" arcWidth="4" fill="#1A3A8F" height="20" width="4" />
-                              <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #1A3A8F;" text="Form Input Karyawan" />
+                              <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #1A3A8F;" text="Form Input Pelanggan" />
                            </children>
                         </HBox>
                         <!-- Kolom Password sudah dihapus total dari form ini. -->
@@ -175,14 +175,34 @@
                            <children>
                               <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="ID Pelanggan" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                               <TextField fx:id="txtIdPelanggan" editable="false" maxWidth="1.7976931348623157E308" promptText="Auto-generate" style="-fx-background-color: #F8F9FC; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                              <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Nama Pelanggan" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtNamaPelanggan" maxWidth="1.7976931348623157E308" promptText="Masukkan nama pelanggan" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="No. Telepon" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                              <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Nama Pelanggan" />
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #D63030;" text="*" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="txtNamaPelanggan" maxWidth="1.7976931348623157E308" promptText="Masukkan nama pelanggan (huruf saja)" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="No. Telepon" />
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #D63030;" text="*" />
+                                 </children>
+                              </HBox>
                               <TextField fx:id="txtNoTelp" maxWidth="1.7976931348623157E308" promptText="08xxxxxxxxxx" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Email" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                              <TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" promptText="\@gmail.com" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Email" />
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #D63030;" text="*" />
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" promptText="nama@gmail.com / yahoo.com / outlook.com / dll" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 12; -fx-font-size: 13px;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                              <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Departemen" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                              <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Departemen" />
+                                    <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #D63030;" text="*" />
+                                 </children>
+                              </HBox>
                               <ComboBox fx:id="cmbDepartemen" maxWidth="1.7976931348623157E308" promptText="Pilih Departemen" style="-fx-background-color: WHITE; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px;" GridPane.columnIndex="3" GridPane.rowIndex="0" />
                               <Label fx:id="lblStatusAkun" style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #333;" text="Status Akun" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <ComboBox fx:id="cmbStatusAkun" maxWidth="1.7976931348623157E308" promptText="Pilih status" style="-fx-background-color: #F8F9FC; -fx-border-color: #D0D8E8; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
